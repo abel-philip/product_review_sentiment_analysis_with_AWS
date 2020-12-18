@@ -14,3 +14,5 @@ def app():
         # st.write(product)
         variable_store.product = product
         # st.write(variable_store.product)
+    else:
+        st.write("Please login first")

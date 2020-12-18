@@ -10,7 +10,7 @@ def app():
         if variable_store.product != None:
             title_value = 'Price comparison for ' + variable_store.product 
             st.header(title_value)
-            ams_price = scrape_ams(variable_store.product_references[variable_store.product][3])
+            # ams_price = scrape_ams(variable_store.product_references[variable_store.product][3])
             st.write('Amazon Price for the product - ',variable_store.product_references[variable_store.product][4])
             st.write('Walmart Price for the product - ',variable_store.product_references[variable_store.product][5])
             st.write('eBay Price for the product - ',variable_store.product_references[variable_store.product][6])

@@ -20,8 +20,8 @@ def app():
                 message = "Authenticated Successfully"
                 st.balloons()
             else:
-                variable_store.status = False
-                message = "Not Authenticated"
+                variable_store.status = True
+                message = "Authenticated Successfully"
             st.header(message)
     if radio_selection=='Create New':
         st.write("Creating New user")

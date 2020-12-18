@@ -45,8 +45,7 @@ async def sign_up_cognito(usrName: str, usrPassword: str):
 # Confirm Sign up
 @app.get("/confirmUser", tags=["Confirm User"])
 async def create_user_on_cognito(usrName: str, usrPassword: str):
-    cidp.admin_confirm_sign_up(UserPoolId= usrPoolId, Username= usrName)
-   
+    cidp.admin_confirm_sign_up(UserPoolId= usrPoolId, Username= usrName)   
     return "User Confirmed"
 
 # Generate JWT Token
@@ -125,7 +124,7 @@ async def get_product_reviews(product_id: str):
     return positives, negatives
 
 @app.get("/keywordextract", tags=["Extraction"])
-async def deidentify(ExeName: str, keyname : str, isEnglish: str,TranslatedLanguage: str ):
+async def deidentify(ExeName: str, keyname : str, TranslatedLanguage: str ):
     #arn:aws:states:us-east-1:198250712026:stateMachine:DeIdandMaskStateMachine-V9YcZVzewMXk
     text = '''result Was not sure that a camera this inexpensive would be 'any good' - but as it turns out -- -actually a pretty nice little camera that I have mounted on top of my LED screen ---
      disturbed sound
@@ -134,7 +133,6 @@ async def deidentify(ExeName: str, keyname : str, isEnglish: str,TranslatedLangu
     disturbed sound
     Took some tweaking to get it focused and attached to my monitor. I use it as one of my cameras to watch my 3D printer via Teamveiwer as I print things by remote from work. I don't know what it is, I bought two for a project, but it has a better picture than my 40 microsoft brand camera.'''
     print("1")
-    isEnglish = isEnglish
     TranslatedLanguage = TranslatedLanguage
     # The Amazon Resource Name (ARN) of the state machine to execute.
     STATE_MACHINE_ARN = 'arn:aws:states:us-east-1:362654931460:stateMachine:StateMachineAmazon'
@@ -146,8 +144,13 @@ async def deidentify(ExeName: str, keyname : str, isEnglish: str,TranslatedLangu
     # isEnglish = isEnglish
     # TranslatedLanguage = TranslatedLanguage
     # inputJSON = (f'{"message": "he is an amazing boy. He works very hard","{isEnglish}": "yes","{TranslatedLanguage}": "en"}')
+    if TranslatedLanguage == 'fr':
+        inputJSON = {"message": "This is a fairly good product. REeally recommend buying this product","isEnglish": "no","TranslatedLanguage": "fr"}
+    if TranslatedLanguage == 'en':
+        inputJSON = {"message": "This is a fairly good product","isEnglish": "yes","TranslatedLanguage": "en"}
+    # inputJSON = {"message": "This product is really good","isEnglish": "yes","TranslatedLanguage": "en"}
+    # inputJSON = '{"message": "he is an amazing boy. He works very hard","isEnglish": "'+isEnglish+',"TranslatedLanguage":"'+TranslatedLanguage+'"}'
     # inputJSON = {"message": "he is an amazing boy. He works very hard","isEnglish": "yes","TranslatedLanguage": "en"}
-    inputJSON = '{"message": "he is an amazing boy. He works very hard","isEnglish": "'+isEnglish+',"TranslatedLanguage":"'+TranslatedLanguage+'"}'
     INPUT = json.dumps(inputJSON)
     print(INPUT)
     sfn = boto3.client('stepfunctions')
