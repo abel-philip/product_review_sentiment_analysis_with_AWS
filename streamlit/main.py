@@ -1,12 +1,13 @@
 import streamlit as st
-import login, variable_store, home, categorize, review, prices
+import login, variable_store, home, categorize, review, prices, summarization
 
 PAGELIST = {
     "Login": login,
     # "Home": home,
     "Select Product": categorize,
     "Review": review,
-    "Prices": prices
+    "Prices": prices,
+    "Summarization": summarization
 }
 
 def app():

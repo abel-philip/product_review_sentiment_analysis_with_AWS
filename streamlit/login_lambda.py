@@ -145,7 +145,7 @@ async def deidentify(ExeName: str, keyname : str, TranslatedLanguage: str ):
     # TranslatedLanguage = TranslatedLanguage
     # inputJSON = (f'{"message": "he is an amazing boy. He works very hard","{isEnglish}": "yes","{TranslatedLanguage}": "en"}')
     if TranslatedLanguage == 'fr':
-        inputJSON = {"message": "This is a fairly good product. REeally recommend buying this product","isEnglish": "no","TranslatedLanguage": "fr"}
+        inputJSON = {"message": "I thought it was too much for the money. Device causes the laptop to run extremely slow","isEnglish": "no","TranslatedLanguage": "fr"}
     if TranslatedLanguage == 'en':
         inputJSON = {"message": "This is a fairly good product","isEnglish": "yes","TranslatedLanguage": "en"}
     # inputJSON = {"message": "This product is really good","isEnglish": "yes","TranslatedLanguage": "en"}

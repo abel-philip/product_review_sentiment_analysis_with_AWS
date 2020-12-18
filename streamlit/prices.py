@@ -5,24 +5,7 @@ from bs4 import BeautifulSoup
 from selectorlib import Extractor
 from time import sleep
 from bokeh.plotting import figure
-def app():
-    if variable_store.status == True:
-        if variable_store.product != None:
-            title_value = 'Price comparison for ' + variable_store.product 
-            st.header(title_value)
-            # ams_price = scrape_ams(variable_store.product_references[variable_store.product][3])
-            st.write('Amazon Price for the product - ',variable_store.product_references[variable_store.product][4])
-            st.write('Walmart Price for the product - ',variable_store.product_references[variable_store.product][5])
-            st.write('eBay Price for the product - ',variable_store.product_references[variable_store.product][6])
-            x = [1, 2, 3]
-            y = [variable_store.product_references[variable_store.product][4],variable_store.product_references[variable_store.product][5],variable_store.product_references[variable_store.product][6]]
-            p = figure(title='simple line example',x_axis_label='Amazon                -                 Walmart                -                 Ebay',  y_axis_label='Cost')
-            p.line(x, y, line_width=1)
-            st.bokeh_chart(p, use_container_width=False)
-        else:
-            st.write(variable_store.product_error_msg)
-
-    def scrape_ams(url):  
+def scrape_ams(url):  
         e = Extractor.from_yaml_file('selectors.yml')
         headers = {
             'dnt': '1',
@@ -51,6 +34,27 @@ def app():
         print(e.extract(r.text))
         return e.extract(r.text)
 
+def app():
+    if variable_store.status == True:
+        if variable_store.product != None:
+            title_value = 'Price comparison for ' + variable_store.product 
+            st.header(title_value)
+            # ams_price = scrape_ams(variable_store.product_references[variable_store.product][3])
+            st.write('Amazon Price for the product - ',variable_store.product_references[variable_store.product][4])
+            st.write('Walmart Price for the product - ',variable_store.product_references[variable_store.product][5])
+            st.write('eBay Price for the product - ',variable_store.product_references[variable_store.product][6])
+            x = [1, 2, 3]
+            y = [variable_store.product_references[variable_store.product][4],variable_store.product_references[variable_store.product][5],variable_store.product_references[variable_store.product][6]]
+            p = figure(title='simple line example',x_axis_label='Amazon                -                 Walmart                -                 Ebay',  y_axis_label='Cost')
+            p.line(x, y, line_width=1)
+            st.bokeh_chart(p, use_container_width=False)
+        else:
+            st.write(variable_store.product_error_msg)
+    else:
+        st.write("Please login first")
+
+    
+
     # product_data = []
     # with open("urls.txt",'r') as urllist, open('output.jsonl','w') as outfile:
     #     for url in urllist.read().splitlines():
@@ -59,3 +63,4 @@ def app():
     #             json.dump(data,outfile)
     #             outfile.write("\n")
     #             # sleep(5)
+    

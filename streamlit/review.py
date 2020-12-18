@@ -10,7 +10,7 @@ def app():
             print(id)
             # res = requests.get(f"https://h7xbsv1m5l.execute-api.us-east-1.amazonaws.com/prod/product_reviews?product_id={id}")
             
-            res = requests.get(f"http://127.0.0.1:8000/product_reviews?product_id=B00B9U44NY")
+            res = requests.get(f"http://127.0.0.1:8000/product_reviews?product_id={id}")
             result = res.json()
             positive = result[0]
             negative = result[1]
@@ -19,3 +19,5 @@ def app():
             # st.plotly_chart(df)
         else:
             st.write(variable_store.product_error_msg)
+    else:
+        st.write("Please login first")

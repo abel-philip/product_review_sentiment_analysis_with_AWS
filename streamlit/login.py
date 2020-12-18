@@ -28,18 +28,20 @@ def app():
         create_username = st.text_input("User Name", value='', max_chars=None)
         create_password = st.text_input("Password", value='', max_chars=None)
         if st.button('Create User'):
-            res = requests.get(f"https://h7xbsv1m5l.execute-api.us-east-1.amazonaws.com/prod/createUser?usrName={create_username}&usrPassword={create_password}")
-            # res = requests.get(f"http://127.0.0.1:8000/createUser?usrName={create_username}&usrPassword={create_password}")
+            # res = requests.get(f"https://h7xbsv1m5l.execute-api.us-east-1.amazonaws.com/prod/createUser?usrName={create_username}&usrPassword={create_password}")
+            res = requests.get(f"http://127.0.0.1:8000/createUser?usrName={create_username}&usrPassword={create_password}")
             try:
                 result = res.json()
+                print(result)
                 if variable_store.confirmation_msg == result:
                     # st.write(result)
                     variable_store.status = True
+                    st.write("Authentication Successful")
                 else:
-                    variable_store.status = True
+                    variable_store.status = False
                     # st.write("Authentication failed. Please enter a different combination in the above fields")
-                    st.write("Authentication successful")
+                    st.write("Authentication UnSuccessful")
             except:
-                variable_store.status = True
-                st.write('Authentication successful')
+                variable_store.status = False
+                st.write('Authentication UnSuccessful')
                 
