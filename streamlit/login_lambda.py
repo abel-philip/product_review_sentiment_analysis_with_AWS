@@ -17,7 +17,7 @@ COOKIE_DOMAIN = "localtest.me"
 userRegion = "us-east-1"
 userClientId = "4hkma6pavubar061g3u11fek9q"
 usrPoolId= "us-east-1_o7TlGk5JE"
-cidp = boto3.client('cognito-idp'region_name='us-east-1')
+cidp = boto3.client('cognito-idp',region_name='us-east-1')
 auth = Cognito(region= userRegion, userPoolId= usrPoolId)
 getUser = CognitoCurrentUser(region= userRegion, userPoolId= usrPoolId)
 
