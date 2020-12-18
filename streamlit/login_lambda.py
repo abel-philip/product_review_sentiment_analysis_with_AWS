@@ -1,4 +1,4 @@
-import boto3
+import boto3, io, json,time
 from boto3.dynamodb.conditions import Key, Attr
 from fastapi import Security, Depends, FastAPI, HTTPException
 from fastapi.security.api_key import APIKeyQuery, APIKeyCookie, APIKeyHeader, APIKey
@@ -8,6 +8,7 @@ from fastapi.openapi.utils import get_openapi
 from starlette.status import HTTP_403_FORBIDDEN
 from starlette.responses import RedirectResponse, JSONResponse
 from mangum import Mangum
+
 # key = Fernet.generate_key()
 key= '-OiJlttOaFGgb_8GVAsJRy5c8sokNizC1BZ8GGt2TX8='
 # parameters for authentication
@@ -103,4 +104,76 @@ async def get_product_reviews(product_id: str):
     )
     positives = [ i['review'] for i in response['Items'] if i['sentiment']=='POSITIVE']
     negatives = [i['review'] for i in response['Items'] if i['sentiment']=='NEGATIVE']
+    str1 = ""  
+    str2=""
+    try:
+        for ele in positives:  
+            str1 += ele
+            str2=ele
+        for ele in negatives:  
+            str1 += ele
+        print(str1)
+    except:
+        print("exception")
+    outbucket = 'final-reviews'
+    s3 = boto3.resource('s3')
+    outfile = io.StringIO(str1)
+    # Generate output file and close it!
+    outobj = s3.Object(outbucket, product_id + '.txt')
+    outobj.put(Body=outfile.getvalue())
+    outfile.close()
     return positives, negatives
+
+@app.get("/keywordextract", tags=["Extraction"])
+async def deidentify(ExeName: str, keyname : str, isEnglish: str,TranslatedLanguage: str ):
+    #arn:aws:states:us-east-1:198250712026:stateMachine:DeIdandMaskStateMachine-V9YcZVzewMXk
+    text = '''result Was not sure that a camera this inexpensive would be 'any good' - but as it turns out -- -actually a pretty nice little camera that I have mounted on top of my LED screen ---
+     disturbed sound
+    Took some tweaking to get it focused and attached to my monitor. I use it as one of my cameras to watch my 3D printer via Teamveiwer as I print things by remote from work. I don't know what it is, I bought two for a project, but it has a better picture than my 40 microsoft brand camera.
+    Was not sure that a camera this inexpensive would be 'any good' - but as it turns out -- -actually a pretty nice little camera that I have mounted on top of my LED screen ---
+    disturbed sound
+    Took some tweaking to get it focused and attached to my monitor. I use it as one of my cameras to watch my 3D printer via Teamveiwer as I print things by remote from work. I don't know what it is, I bought two for a project, but it has a better picture than my 40 microsoft brand camera.'''
+    print("1")
+    isEnglish = isEnglish
+    TranslatedLanguage = TranslatedLanguage
+    # The Amazon Resource Name (ARN) of the state machine to execute.
+    STATE_MACHINE_ARN = 'arn:aws:states:us-east-1:362654931460:stateMachine:StateMachineAmazon'
+    #The name of the execution user input
+    EXECUTION_NAME = ExeName #u have to take this from user ...
+    #reading the file to be deidentified
+    print("3")
+    #The string that contains the JSON input data for the execution
+    # isEnglish = isEnglish
+    # TranslatedLanguage = TranslatedLanguage
+    # inputJSON = (f'{"message": "he is an amazing boy. He works very hard","{isEnglish}": "yes","{TranslatedLanguage}": "en"}')
+    # inputJSON = {"message": "he is an amazing boy. He works very hard","isEnglish": "yes","TranslatedLanguage": "en"}
+    inputJSON = '{"message": "he is an amazing boy. He works very hard","isEnglish": "'+isEnglish+',"TranslatedLanguage":"'+TranslatedLanguage+'"}'
+    INPUT = json.dumps(inputJSON)
+    print(INPUT)
+    sfn = boto3.client('stepfunctions')
+    print("4")
+    response = sfn.start_execution(
+        stateMachineArn=STATE_MACHINE_ARN,
+        name=EXECUTION_NAME,
+        input=INPUT
+    )
+    print("5")
+    #display the arn that identifies the execution
+    executionARN = response.get('executionArn')
+    print("running with Mask")
+    #waiting
+    time.sleep(1)
+    print("wait....")
+    time.sleep(5)
+    print("wait....")
+    time.sleep(4)
+    print("wait....")
+    
+    #getting actual response
+    response = sfn.get_execution_history(
+        executionArn=executionARN,
+        maxResults=1,
+        reverseOrder=True,
+        includeExecutionData=True
+    )
+    return response

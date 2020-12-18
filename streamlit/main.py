@@ -3,7 +3,7 @@ import login, variable_store, home, categorize, review, prices
 
 PAGELIST = {
     "Login": login,
-    "Home": home,
+    # "Home": home,
     "Select Product": categorize,
     "Review": review,
     "Prices": prices
