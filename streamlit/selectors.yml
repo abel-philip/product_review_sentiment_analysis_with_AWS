@@ -1,0 +1,3 @@
+price:
+    css: '#price_inside_buybox'
+    type: Text
